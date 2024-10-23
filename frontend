@@ -1,0 +1,41 @@
+import React, { useState } from "react";
+import axios from "axios";
+
+function App() {
+  const [script, setScript] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("https://tu-backend.com/api/generate", {
+        script: script,
+      });
+      setVideoUrl(response.data.videoUrl);
+    } catch (error) {
+      console.error("Error generating video", error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Noricumbo AI</h1>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          placeholder="Escribe tu guion aquí..."
+          value={script}
+          onChange={(e) => setScript(e.target.value)}
+        ></textarea>
+        <button type="submit">Generar Video</button>
+      </form>
+      {videoUrl && (
+        <div>
+          <h2>Video Generado:</h2>
+          <video src={videoUrl} controls></video>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
